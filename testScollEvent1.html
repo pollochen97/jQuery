@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+        integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <title>Document</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            padding: 0;
+            margin: 0;
+        }
+
+        .topMenu {
+            box-sizing: border-box;
+            position: fixed;
+            top: 0;
+            background-color: #053d8b;
+            width: 100%;
+            height: 0px;
+            display: flex;
+            justify-content: space-between;
+            padding-top: 0px;
+            padding-left: 5px;
+            padding-right: 5px;
+        }
+
+        .topMenu.active {
+            height: 50px;
+            padding-top: 5px;
+        }
+
+        .topMenu .icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #2b4cc2;
+            color: #fff;
+            cursor: pointer;
+            user-select: none;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            margin-left: 5px;
+        }
+
+        .topMenu .icon.active {
+            display: flex;
+        }
+
+        .topMenu .icon:hover {
+            background-color: #ffffff;
+            color: #2b4cc2;
+        }
+
+        .bottomMenu {
+            position: fixed;
+            bottom: 20px;
+            box-sizing: border-box;
+            display: flex;
+            border-radius: 50px;
+            background-color: #053d8b;
+            padding-top: 5px;
+            padding-bottom: 5px;
+            width: 0px;
+            height: 0px;
+            margin-bottom: 25px;
+            transition: all 0.2s;
+        }
+
+        .bottomMenu.active1 {
+            transition: width 0.7s;
+            width: calc(10px + 50px * 5 + 10px * 4);
+        }
+
+        .bottomMenu.active2 {
+            transition: all 0.3s;
+            height: calc(10px + 50px);
+            margin-bottom: 0;
+        }
+
+        .bottomMenu .icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: #2b4cc2;
+            color: #fff;
+            cursor: pointer;
+            user-select: none;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            margin-left: 5px;
+        }
+
+        .bottomMenu .icon:hover {
+            background-color: #ffffff;
+            color: #2b4cc2;
+        }
+
+        .bottomMenu .icon.active {
+            display: flex;
+        }
+
+        .bottomMenu .icon:not(:last-child) {
+            margin-right: 5px;
+        }
+
+        main {
+            width: 100%;
+        }
+
+        section {
+            width: 100%;
+            height: 100vh;
+            background-size: cover;
+        }
+
+        .section1 {
+            background-image: url(https://images.pexels.com/photos/1293120/pexels-photo-1293120.jpeg?auto=compress&cs=tinysrgb&w=600);
+        }
+
+        .section2 {
+            background-image: url(https://images.pexels.com/photos/268976/pexels-photo-268976.jpeg?auto=compress&cs=tinysrgb&w=600);
+        }
+
+        .section3 {
+            background-image: url(https://images.pexels.com/photos/1784578/pexels-photo-1784578.jpeg?auto=compress&cs=tinysrgb&w=600);
+        }
+
+        .section4 {
+            background-image: url(https://images.pexels.com/photos/45206/roofing-tile-red-wall-45206.jpeg?auto=compress&cs=tinysrgb&w=600);
+        }
+
+        .section5 {
+            background-image: url(https://images.pexels.com/photos/426983/pexels-photo-426983.jpeg?auto=compress&cs=tinysrgb&w=600);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="topMenu">
+        <div class="icon icon1">
+            <i class="fa-solid fa-chevron-left"></i>
+        </div>
+        <div class="icon icon1">
+            <i class="fa-solid fa-chevron-right"></i>
+        </div>
+    </div>
+    <div class="bottomMenu">
+        <div class="icon icon1">
+            <i class="fa-solid fa-house"></i>
+        </div>
+        <div class="icon icon2">
+            <i class="fa-solid fa-magnifying-glass"></i>
+        </div>
+        <div class="icon icon3">
+            <i class="fa-solid fa-user"></i>
+        </div>
+        <div class="icon icon4">
+            <i class="fa-solid fa-image"></i>
+        </div>
+        <div class="icon icon5">
+            <i class="fa-solid fa-envelope"></i>
+        </div>
+    </div>
+    <main>
+        <section class="section1"></section>
+        <section class="section2"></section>
+        <section class="section3"></section>
+        <section class="section4"></section>
+        <section class="section5"></section>
+    </main>
+    <script src="./js/jquery-3.7.1.min.js"></script>
+    <script>
+        let showCheck = false;
+        let pageHeight = $("body").height();
+        let windowHeight = $(window).height();
+        console.log(pageHeight);
+        console.log(windowHeight);
+        console.log(pageHeight + windowHeight);
+        let scrollAreaHeight = pageHeight - windowHeight;
+        console.log(scrollAreaHeight);
+
+        
+        $(window).on("click", () => {
+            menuToggle();
+        }).on("scroll", function () {
+            let scrollTop = $(this).scrollTop();
+            //console.log($(this).scrollTop());
+            let scrollPercent = (Math.ceil(scrollTop) / scrollAreaHeight) * 100;
+            console.log(scrollTop, scrollPercent + "%");
+            if (scrollPercent == 0 || scrollPercent == 100) {
+                showCheck = true;
+                openTop();
+                openBottom();
+            } else {
+                showCheck = false;
+                closeTop();
+                closeBottom();
+            }
+
+        }); //可以直接接上on在window上面;
+
+        // Function會提升：寫在這裡前面也可以用這個function
+        function menuToggle(){
+            if (showCheck == false) {
+                showCheck = true;
+                openTop();
+                openBottom();
+            } else {
+                showCheck = false;
+                closeTop();
+                closeBottom();
+            }
+        }
+        function openTop() {
+            $(".topMenu").addClass("active");
+            $(".topMenu .icon").addClass("active");
+        }
+        function closeTop() {
+            $(".topMenu").removeClass("active");
+            $(".topMenu .icon").removeClass("active");
+
+        }
+        function openBottom() {
+            $(".bottomMenu")
+                .addClass("active1")
+                .addClass("active2");
+            $(".bottomMenu .icon")
+                .addClass("active");
+        }
+        function closeBottom() {
+            $(".bottomMenu")
+                .removeClass("active1")
+                .removeClass("active2");
+            $(".bottomMenu .icon")
+                .removeClass("active");
+        }
+
+    </script>
+</body>
+
+</html>

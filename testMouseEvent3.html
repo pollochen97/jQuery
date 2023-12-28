@@ -21,13 +21,20 @@
     <div class="tip">開啟右鍵選單</div>	
     <script src="./js/jquery-3.7.1.min.js"></script>
     <script>
-        $(document).on("contextmenu", (e)=>{
+        // $(document).on("contextmenu", (e)=>{
+        //     e.preventDefault();
+        // })
+        // $(".tip").on("contextmenu", (e)=>{
+        //     //e.preventDefault();
+        //     e.stopPropagation();
+        //     //阻止冒泡事件
+        // })        
+        
+        document.addEventListener("contextmenu", (e)=>{
             e.preventDefault();
         })
-        $(".tip").on("contextmenu", (e)=>{
-            //e.preventDefault();
+        document.querySelector(".tip").addEventListener("contextmenu", (e)=>{
             e.stopPropagation();
-            //阻止冒泡事件
         })
     </script>
 </body>

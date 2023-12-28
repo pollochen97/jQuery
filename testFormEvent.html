@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"
+        integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <title>Test Form Event</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            width: 600px;
+        }
+
+        .row {
+            display: flex;
+            padding: 10px;
+            background-color: #c6c5c5;
+            border-radius: 10px;
+            margin-bottom: 10px;
+        }
+
+        .row.active {
+            background-color: #f6b46d;
+        }
+
+        .row label {
+            width: 50px;
+        }
+
+        .row input {
+            width: 100%;
+            border: none;
+        }
+
+        /* .row input:focus {
+            outline: 4px solid #ea9191;            
+        } */
+
+        .row input.active {
+            outline: 4px solid #e10e0e;            
+        }
+
+        .row input::placeholder{
+            font-size: 12px;
+            color: #ea9191;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <form>
+            <div class="row row1">
+                <label for="input1">input1</label>
+                <input id="input1" type="text" placeholder="test">
+            </div>
+            <div class="row row2">
+                <label for="input2">input2</label>
+                <input id="input2" type="text">
+            </div>
+            <div class="row row3">
+                <label for="input3">input3</label>
+                <input id="input3" type="text">
+            </div>
+            <div class="row row4">
+                <label for="input4">input4</label>
+                <input id="input4" type="text">
+            </div>
+        </form>
+    </div>
+    <script>
+        $("input")
+            .on("focus", function(){
+                $(this).addClass("active");
+                // $(this).parent().addClass("active");
+                // $(this).parentsUntil()
+                $(this).closest(".row").addClass("active");
+            })
+            .on("blur", function(){
+                $(this).removeClass("active");
+                // $(this).parent().removeClass("active");
+            });
+        // $(".row")
+        // .on("focusin", function(){
+        //     $(this).addClass("active")
+        // })
+        // .on("focusout", function(){
+        //     $(this).removeClass("active")
+        // });
+    </script>
+</body>
+
+</html>

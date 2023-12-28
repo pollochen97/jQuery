@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+        integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <title>Page To do list 未來事件</title>
+    <style>
+        .row1 {
+            border-bottom: 2px dotted #ccc;
+            margin-top: 10px;
+            font-size: 18px;
+        }
+
+        .row2 {
+            border-bottom: 2px dotted #ccc;
+            margin-top: 10px;
+            font-size: 18px;
+        }
+
+        input[type=text] {
+            width: 100%;
+            margin-bottom: 10px;
+            font-size: 18px;
+        }
+        /* 把寬度長出來，增加感應區塊 */
+        input[type=checkbox] + label {
+            display: block;
+            flex: 1;
+        }
+        .todoRow{
+            display: flex;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="row row2">
+            待辦事項
+        </div>
+        <div class="area1">
+            <div class="row row1 todoRow">
+                <input id="todo1" type="checkbox">
+                <label for="todo1">買雞蛋</label>
+            </div>
+            <div class="row row1 inputRow">
+                <input type="text" placeholder="輸入內容後按Enter送出">
+            </div>
+        </div>
+        <div class="area2">
+            <div class="row row2">
+                完成事項
+            </div>
+        </div>
+    </div>
+    <script src="./js/jquery-3.7.1.min.js"></script>
+    <script>
+        //建立痊癒變數給todo(n)
+        let todoAmount = 1;
+        $("input[type=text]").on("keyup", function (e) {
+            // console.log(e.keyCode);
+            // console.log(e.which);
+            //console.log(e.key);
+            if (e.key === "Enter") {
+                //console.log($(this).val());//取出輸入的值
+                let todoContent = $(this).val();
+                let template = `<div class="row row1 todoRow">
+                <input id="todo${todoAmount}" type="checkbox">
+                <label for="todo${todoAmount}">${todoContent}</label>
+                </div>`;
+                $(this).closest(".row").before(template) //擺放的位置(在template前面，在買雞蛋後面)
+                $(this).val(""); //內容清空(考量UX情境)
+            };
+        })
+        // $("input[type=checkbox]").on("change", function(){
+        //     //console.log($(this).val());
+        //     //console.log($(this).prop("checked")); //true and false
+        //     if($(this).prop("checked") === true){
+        //         $(this).closest(".row").appendTo(".area2")
+        //     }else{
+        //         $(this).closest(".row").insertBefore(".inputRow")
+        //         //讓已打勾的物件回去到inputRow前面
+        //         //這裡沒有未來事件：先打的待辦事項沒有反應
+        //     }
+
+        // })
+
+        //container有包含area1 & area2
+        //輸入欄位加在中間的參數
+        $(".container").on("change", "input[type=checkbox]", function(){
+            //console.log($(this).val());
+            //console.log($(this).prop("checked")); //true and false
+            if($(this).prop("checked") === true){
+                $(this).closest(".row").appendTo(".area2")
+            }else{
+                $(this).closest(".row").insertBefore(".inputRow")
+                //讓已打勾的物件回去到inputRow前面
+                //這裡沒有未來事件：先打的待辦事項沒有反應
+            }
+
+        })
+    </script>
+</body>
+
+</html>
