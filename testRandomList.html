@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">	
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <title>Test Random List 隨機不重複(大樂透)</title>
+    <style>
+        
+    </style>
+</head>
+<body>	
+    <script src="./js/jquery-3.7.1.min.js">	
+        
+    </script>
+    <script>
+        
+        console.log(randomList(1,49,6));
+        console.log(randomList(1,6,2));
+
+        function randomList(startNum, endNum, amount){
+
+        let leftBox = [];
+        let rightBox = [];
+        for(let i=startNum; i<=endNum; i++){            
+            leftBox.push(i);
+        }
+        //console.log(leftBox);
+
+        //pickOne();
+        //抽6個(amount)
+        for(let i=0; i<amount; i++){
+            pickOne();
+        }
+        //console.log(rightBox);
+
+        return rightBox;
+
+        //抽一個號碼出來
+        // let pickIndex = Math.floor(Math.random()*leftBox.length);
+        //console.log(pickIndex);
+        // rightBox.push(leftBox[pickIndex]);
+        // leftBox.splice(pickIndex,1);
+        // console.log(pickIndex);
+        // console.log(leftBox);
+
+        function pickOne(){
+            let pickIndex = Math.floor(Math.random()*leftBox.length);
+            //console.log(pickIndex);
+            rightBox.push(leftBox[pickIndex]);
+            leftBox.splice(pickIndex,1);
+            //console.log(pickIndex);
+            //console.log(leftBox);
+        }
+        }
+
+        //抽一個號碼出來
+        // pickIndex = Math.floor(Math.random()*48);
+        // //console.log(pickIndex);
+        // rightBox.push(leftBox[pickIndex]);
+        // leftBox.splice(pickIndex,1);
+        // console.log(pickIndex);
+        // console.log(leftBox);
+
+    </script>
+</body>
+</html>
