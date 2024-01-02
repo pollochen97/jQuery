@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .container {
+            .row {
+                display: flex;
+                padding: 4px;
+
+                &:hover {
+                    background-color: #f1ebdd;
+                }
+            }
+
+            .col:nth-child(1) {
+                width: 20px;
+            }
+
+            .col:nth-child(2) {
+                flex: 1;
+            }
+
+            .col:nth-child(3) {
+                width: 100px;
+
+                & img {
+                    width: 100%;
+                    aspect-ratio: 1/1;
+                    object-fit: cover;
+                }
+            }
+
+            .col:nth-child(4) {
+                width: 100px;
+            }
+
+            .cover {
+                position: fixed;
+                width: 100%;
+                height: 100vh;
+                background-color: rgba(0, 0, 0, 0.5);
+                display: none;
+
+                .left {
+                    width: calc(100% / 2);
+                    padding: 10px;
+
+                    & img {
+                        width: 100%;
+                    }
+                }
+
+                .right {
+                    flex: 1;
+                    color: #fff;
+                }
+            }
+
+            .active {
+                display: flex;
+            }
+
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="cover">
+            <div class="left">
+                <img src="https://www.books.com.tw/img/001/086/35/0010863501.jpg" alt="">
+            </div>
+            <div class="right">
+
+            </div>
+        </div>
+
+    </div>
+    <script src="./js/jquery-3.7.1.min.js">
+
+    </script>
+
+
+
+    <script>
+        //let url = "test.txt";
+        let url = "https://sagedaben.com/iSpan/api/list.php"; //書單
+        let url2 = "https://sagedaben.com/iSpan/api/detail.php"; //詳細資料
+        let bookDatas;
+
+        const container = document.querySelector(".container");
+
+        const xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function () {
+            //console.log(this);
+            //有4個事件階段
+        }
+        xhttp.onload = function () {
+            if (this.status === 200) {
+                bookDatas = JSON.parse(this.response);
+                setList()
+            }
+
+        }
+        xhttp.open("GET", url);
+        xhttp.send(); //AJAX送出的古老過程
+
+        function setList() {
+            console.log(bookDatas);
+            bookDatas.forEach((data, index) => {
+                //console.log(data);
+
+                let template = `
+                    <div class="row" data-n="${data.id}">
+                        <div class="col">${index + 1}</div>
+                        <div class="col">${data.title}</div>
+                        <div class="col">
+                            <img src="${data.cover}" alt="">
+                        </div>
+                        <div class="col">${data.auth}</div>
+                        </div>`;
+                let node = document.createElement("div");
+                node.innerHTML = template;
+                container.append(node.children[0]);
+            });
+            [...document.querySelectorAll(".row")].map((item) => {
+                //item來替代索引值
+                item.addEventListener("click", (e) => {
+                    console.log(e.currentTarget.dataset.n);//data-n的部分
+                    showBig(parseInt(e.currentTarget.dataset.n));
+
+
+                })
+            }); //nodelist(偽陣列)
+            // $(".row").on("click", (e)=>{
+            //     let that = e.currentTarget;
+            //     console.log($(that).data("n"));
+            //     showBig(parseInt($(that).data("n")))
+            // })
+        }
+
+        //不刷新頁面，用div的方式去呈現另一個視窗的內容(可以利用這個方式)
+        function showBig(n) {
+            console.log(n);
+            let params = {id: n};
+
+            const xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function () {
+                //console.log(this);
+                //有4個事件階段
+            }
+            xhttp.onload = function () {
+                if (this.status === 200) {
+                    //console.log(this.response);
+                    //console.log(this);
+                    let data = JSON.parse(this.response);
+                    console.log(data);
+
+                    
+                    document.querySelector(".cover img").setAttribute("src", data.data.cover);
+                    document.querySelector(".cover .right").innerHTML=(data.data.descd);
+                    document.querySelector(".cover").classList.add("active");
+                    
+                }
+
+            }
+            xhttp.open("POST", url2);
+            xhttp.send(JSON.stringify(params));
+            //講義第17
+        }
+    </script>
+</body>
+
+</html>

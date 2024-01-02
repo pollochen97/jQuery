@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">	
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <title>Test method</title>
+    <style>
+        
+    </style>
+</head>
+<body>	
+    <div class="container">
+        <div class="row row1">1</div>
+        <div class="row row2">2</div>
+        <div class="row row3">3</div>
+        <div class="row row4">4</div>
+        <div class="row row5">5</div>
+    </div>
+    <script src="./js/jquery-3.7.1.min.js">	
+        
+    </script>
+    <script>
+        // console.log($(".row3").index());
+        // console.log($(".row").toArray());
+        // console.log($(".row").get());
+        // console.log($(".row").get(3)); 
+        // console.log($(".row").eq(3)); 
+
+        // let xmlString = "<bookstore><book><title>Book 1</title></book><book><title>Book 2</title></book></bookstore>";
+        // let xmlDoc = $.parseXML(xmlString);
+        // console.log(xmlDoc);
+        // $(xmlDoc).find("book").each((index, elem)=>{
+        //     console.log(elem);
+        // })
+
+        let array = ['sky', 'maplet', 'car', 'mapper', 'dog', 'maple'];
+        // let newArray = $.grep(array, (elem, index)=>{
+        //     //console.log(elem);
+        //     return elem.indexOf("map") != -1;
+        // })
+        // let newArray = $.grep(array, elem=>elem.indexOf("map") != -1)
+        // console.log(newArray);
+
+        // let newArray2 = array.filter(elem=>elem.indexOf("map") != -1)
+        // console.log(newArray2);
+
+        // console.log($.inArray("skyy", array));
+        // console.log(array.indexOf("sky"));
+        // console.log(array.includes("skyy"));
+
+        // console.log($(".row"));
+        // console.log($.isArray($(".row"))); //類陣列不是陣列
+        // console.log($.makeArray($(".row")));
+        // console.log($.isArray($.makeArray($(".row")))); //reverse反轉陣列(需要物件是陣列才可以使用，類陣列不行!)
+
+        // let array2 = ["a", "b", "c", "d", "e"];
+        // $.map(array2, (elem, index)=>{
+        //     console.log(elem); //不知道放哪裡就兩個都放放看
+        //     //用原生JS的方法去執行比較好
+        // })
+
+        let ary1 = [1, 2, 3];
+        let ary2 = [4, 5, 6];
+        let ary3 = [7, 8, 9];
+        //let ary = $.merge(ary1, ary2, ary3);
+        //console.log(ary);
+        console.log([].concat(ary1, ary2, ary3));
+        console.log([...ary1, ...ary2, ...ary3]);
+        
+        let str = "<b>TEST</b>test123"
+        $("body").append($.parseHTML(str));
+        $("body").append($(str)); //沒有標籤以外的內容
+        //create element innerHTML
+
+        let ary4 = [1, 2, 3, 2, 1];
+        console.log(ary4);
+        console.log($.unique(ary4));//現在3.7的JQuery已經沒有辦法操作變數的陣列....(針對DOM物件還可以)
+        //用原生的JS來寫
+        //先排序處理，等等來去掉重複的值
+        console.log(ary4.sort((a,b)=>a-b));
+        console.log(ary4.sort((a,b)=>b-a));
+        console.log([...new Set(ary4)]); //Set不允許重複的值(新的格式)，很好用！
+        console.log(ary4.filter((item, index, ary)=>ary.indexOf(item) === index
+        )); // item當前元素，index索引值 //return{}簡約寫法刪除
+        //console.log(ary4.filter((item, index)=>ary4.indexOf(item) === index));
+        
+        //data("key") = JS 的 dataset.key 自定義屬性
+
+    </script>
+</body>
+</html>
