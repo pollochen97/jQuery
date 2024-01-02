@@ -62,6 +62,11 @@
 
         .tag{
             background-color: #0861a0;
+            margin-left: 10px;
+            border-radius: 10px;
+            color: #f3f3f3;
+            box-sizing: border-box;
+            padding: 5px;
         }
     </style>
 </head>
@@ -73,28 +78,28 @@
 
             </div>
             <div class="row row2">
-                <label for="inpu1" name="input1">inpu1</label>
-                <input id="inpu1" type="text">
+                <label for="input1" name="input1">input1</label>
+                <input id="input1" type="text">
             </div>
             <div class="row row3">
-                <input id="inpu2_1" type="checkbox" name="input2" value="c1">
-                <label for="inpu2_1">inpu2_1</label>
-                <input id="inpu2_2" type="checkbox" name="input2" value="c2">
-                <label for="inpu2_2">inpu2_2</label>
-                <input id="inpu2_3" type="checkbox" name="input2" value="c3">
-                <label for="inpu2_3">inpu2_3</label>
-                <input id="inpu2_4" type="checkbox" name="input2" value="c4">
-                <label for="inpu2_4">inpu2_4</label>
+                <input id="input2_1" type="checkbox" name="input2" value="c1">
+                <label for="input2_1">input2_1</label>
+                <input id="input2_2" type="checkbox" name="input2" value="c2">
+                <label for="input2_2">input2_2</label>
+                <input id="input2_3" type="checkbox" name="input2" value="c3">
+                <label for="input2_3">input2_3</label>
+                <input id="input2_4" type="checkbox" name="input2" value="c4">
+                <label for="input2_4">input2_4</label>
             </div>
             <div class="row row4">
-                <input id="inpu3_1" type="radio" name="input3" value="r1">
-                <label for="inpu3_1">inpu3_1</label>
-                <input id="inpu3_2" type="radio" name="input3" value="r2">
-                <label for="inpu3_2">inpu3_2</label>
-                <input id="inpu3_3" type="radio" name="input3" value="r3">
-                <label for="inpu3_3">inpu3_3</label>
-                <input id="inpu3_4" type="radio" name="input3" value="r4">
-                <label for="inpu3_4">inpu3_4</label>
+                <input id="input3_1" type="radio" name="input3" value="r1">
+                <label for="input3_1">input3_1</label>
+                <input id="input3_2" type="radio" name="input3" value="r2">
+                <label for="input3_2">input3_2</label>
+                <input id="input3_3" type="radio" name="input3" value="r3">
+                <label for="input3_3">input3_3</label>
+                <input id="input3_4" type="radio" name="input3" value="r4">
+                <label for="input3_4">input3_4</label>
             </div>
             <div class="row row5">
                 <label for="input5">input5</label>
@@ -135,7 +140,12 @@
             // console.log($(this).val());
             // $(".row1").text($(this).val());
             // text()空的取值，放入東西給值
-            $(".row1").html($(this).val().split(" ").map((elm)=>{return }));
+
+            //只有return可以省略return和{}，只有一個元素可以省略()
+            $(".row1").html($(this).val().split(" ").map(elm=>`<span class="tag">${elm}</span>`));
+            //$(".row1").html($(this).val().split(" ").map((elm)=>{return `<span class="tag">${elm}</span>`}));
+
+
 
             //innerHTML <br> 是html
             // $(".row1").html($(this).val().replaceAll("\n", "<br>"));
@@ -143,6 +153,43 @@
             //以前沒有replaceAll的寫法：用JS的正規表達式，g是全域
             // $(".row1").html($(this).val().replace(/\n/g, "<br>"));
         });
+
+        $("select").on("change", function(){
+            const target = $(this).find(":selected");
+            console.log(target.text());
+            console.log(target.index());
+            console.log(target.val());
+            //console.log($(this).find(":selected").text()); //:selected篩選器
+            //console.log($(this).find(":selected").index()); //取index
+            //console.log($(this).find(":selected").val()); //取值
+            let text = target.text();
+            let index = target.index();
+            let value = target.val();
+
+            $(".row1").text(`現在選取的欄位是${text},是第${index}項目,值是${value}`);
+        })
+
+        $("input[type=radio]").on("change", function(){
+            //console.log($(this).next("label").text());
+            //console.log($(this).val());
+
+            let text = $(this).next("label").text();
+            let value = $(this).val();
+
+            $(".row1").text(`現在選取的單選欄位是${text},值是${value}`);
+        });
+
+        $("input[type=checkbox]").on("change", function(){
+            let vals = [];
+            let texts = [];
+            //console.log($(this).next("label").text());
+            //console.log($(this).val());
+            $(this).closest(".row").find("input[type=checkbox]:checked").each(function(){
+                vals.push($(this).val()); //把東西塞到陣列的最後一欄的方法
+                texts.push($(this).next("label").text());
+            }); //有可能是1個以上的東西，結果會是陣列（類陣列），用foreach.map或each來達成遍例的方式
+            $(".row1").text(vals.join("----"));
+        })
         
     </script>
 </body>
