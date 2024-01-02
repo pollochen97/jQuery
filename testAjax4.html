@@ -18,9 +18,15 @@
     </script>
     <script>
         let url = "https://sagedaben.com/iSpan/api/file.php?file=setBtn.js"
-        $.getJSON(url, function(data){
-            console.log("log");
+        $.getScript(url, function(data){
+            //console.log(data);
+            //getScript把東西載入放盡document裡面
+            console.log("log"); //測試的log：確認是否有載入
+            //不會存入任何的內容，可以載入任何的script放入我們的網頁中
         })
+        
+        
+        
     </script>
 </body>
 </html>
