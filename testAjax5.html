@@ -21,11 +21,14 @@
         let params = {
             name: "Ben",
             age: 18,
-            dataType: "String"
+            dataType: "JSON"
+            //dataType: "String" / "Num"
         };
+        //參數 parameter
+        // $.post(url, {}, function(data){});
         $.post(url, params, function(data){
             console.log(data);
-        })
+        });
     </script>
 </body>
 </html>
