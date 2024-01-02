@@ -92,6 +92,11 @@
         let url2 = "https://sagedaben.com/iSpan/api/detail.php"; //詳細資料
         let bookDatas;
 
+        //加上關起來的地方
+        document.querySelector(".cover").addEventListener("click", function(){
+            this.classList.remove("active");
+        });
+
         const container = document.querySelector(".container");
 
         const xhttp = new XMLHttpRequest();
@@ -163,8 +168,7 @@
                     
                     document.querySelector(".cover img").setAttribute("src", data.data.cover);
                     document.querySelector(".cover .right").innerHTML=(data.data.descd);
-                    document.querySelector(".cover").classList.add("active");
-                    
+                    document.querySelector(".cover").classList.add("active");                    
                 }
 
             }
