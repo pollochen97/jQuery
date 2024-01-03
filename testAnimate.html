@@ -69,7 +69,7 @@
             <button id="btn2">2 號動</button>
             <button id="btn3">2 號停</button>
             <button id="btn4">3 啟動</button>
-            <button id="btn5">4-5 依序動</button>
+            <button id="btn5">4-5-6 依序動</button>
         </div>
         <div class="row row1">
             <div class="plane" data-n="1">
@@ -92,9 +92,8 @@
             </div>
         </div>
     </div>
-    <script src="./js/jquery-3.7.1.min.js">
-
-    </script>
+    <script src="./js/jquery-3.7.1.min.js"></script>
+    <script src="./js/jquery.pause.min.js"></script>
     <script>
         $("#btn1").on("click", (e)=>{
             $(".plane").eq(0).animate({                
@@ -120,6 +119,19 @@
             p2Right(2);
         })
 
+        $("#btn5").on("click", (e)=>{
+            p2Right2(3); //第4架飛機索引值3
+        })
+
+        //使用套件 Pause https://tobia.github.io/Pause/
+        $(".plane").eq(2)
+        .on("mouseenter", (e)=>{
+            $(e.currentTarget).pause();
+        })
+        .on("mouseleave", (e)=>{
+            $(e.currentTarget).resume();
+        })
+
         function p2Left(num){
             $(".plane").eq(num).find("img").addClass("left")
             $(".plane").eq(num).animate({
@@ -142,6 +154,25 @@
                 easing: "linear",
                 complete: ()=>{
                     p2Left(num)
+                }
+            })
+        }
+
+        function p2Right2(num){
+            if($(".plane").eq(num).length === 0){
+                return false;
+            }
+
+            $(".plane").eq(num).find("img").removeClass("left");
+            $(".plane").eq(num).animate({
+                left: $(".row1").width() - $(".plane").eq(num).width()
+            },{
+                duration: 2000,
+                easing: "linear",
+                // step: ()=>{},
+                complete: ()=>{
+                    p2Right2(num+1)//只執行一次(因為不會去複製)
+                    p2Left(num);
                 }
             })
         }
