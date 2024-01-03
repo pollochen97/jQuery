@@ -107,6 +107,33 @@
             }) //JQuery物件才有辦法使用animate()
             //物件左邊的屬性值一定是字串，可以不用加""
         })
+
+        $("#btn2").on("click", (e)=>{
+            p2Right()
+        })
+
+        function p2Left(){
+            $(".plane").eq(1).find("img").addClass("left")
+            $(".plane").eq(1).animate({
+                left: 0
+            },{
+                duration: 2000,
+                easing: "linear",
+                complete: p2Right
+            })
+        }
+
+        function p2Right(){
+            $(".plane").eq(1).find("img").removeClass("left");
+            $(".plane").eq(1).animate({
+                left: $(".row1").width() - $(".plane").eq(1).width()
+            },{
+                duration: 2000,
+                easing: "linear",
+                complete: p2Left
+            })
+        }
+
     </script>
 </body>
 
