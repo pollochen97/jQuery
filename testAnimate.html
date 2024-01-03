@@ -109,28 +109,40 @@
         })
 
         $("#btn2").on("click", (e)=>{
-            p2Right()
+            p2Right(1)
         })
 
-        function p2Left(){
-            $(".plane").eq(1).find("img").addClass("left")
-            $(".plane").eq(1).animate({
+        $("#btn3").on("click", (e)=>{
+            $(".plane").eq(1).stop(); //找到要animate停止的目標
+        })
+
+        $("#btn4").on("click", (e)=>{
+            p2Right(2);
+        })
+
+        function p2Left(num){
+            $(".plane").eq(num).find("img").addClass("left")
+            $(".plane").eq(num).animate({
                 left: 0
             },{
                 duration: 2000,
                 easing: "linear",
-                complete: p2Right
+                complete: ()=>{
+                    p2Right(num)
+                }
             })
         }
 
-        function p2Right(){
-            $(".plane").eq(1).find("img").removeClass("left");
-            $(".plane").eq(1).animate({
-                left: $(".row1").width() - $(".plane").eq(1).width()
+        function p2Right(num){
+            $(".plane").eq(num).find("img").removeClass("left");
+            $(".plane").eq(num).animate({
+                left: $(".row1").width() - $(".plane").eq(num).width()
             },{
                 duration: 2000,
                 easing: "linear",
-                complete: p2Left
+                complete: ()=>{
+                    p2Left(num)
+                }
             })
         }
 
