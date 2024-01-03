@@ -52,7 +52,6 @@
             z-index: 1;
             text-align: center;
         }
-
         .plane img {
             transform: rotate(90deg);
         }
@@ -99,8 +98,14 @@
     <script>
         $("#btn1").on("click", (e)=>{
             $(".plane").eq(0).animate({                
-                left: 520 //不需要單位                
-            },2000, "linear") //JQuery物件才有辦法使用animate()
+                // top: 100,
+                // left: 520 //不需要單位  
+                left: $(".row1").width() - $(".plane").eq(0).width()              
+            },{
+                duration: 2000,
+                easing: "linear"
+            }) //JQuery物件才有辦法使用animate()
+            //物件左邊的屬性值一定是字串，可以不用加""
         })
     </script>
 </body>
