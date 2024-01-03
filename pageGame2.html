@@ -10,6 +10,7 @@
     <title>Test Game</title>
     <!-- 快速鍵應用 ctrl+S shift 會參照電腦的更新速度 -->
     <!-- 使用一個gameLoop()是不會當機的無限迴圈 -->
+    <!-- window.requestAnimationFrame(gameLoop); -->
     <style>
         .game {
             position: relative;
@@ -37,6 +38,7 @@
                 margin: auto;
                 bottom: 10px;
                 filter: drop-shadow(2px 2px 8px yellow);
+                z-index: 1;
             }
 
             .bullet {
@@ -46,7 +48,7 @@
                 width: 24px;
                 height: 25px;
                 margin: auto;
-                bottom: 50px;
+                bottom: 30px;
                 filter: drop-shadow(1px 1px 2px rgb(255, 255, 255));
             }
         }
