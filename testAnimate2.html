@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+        integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <title>Animate 純JS純CSS版 vanilla JS</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            width: 600px;
+        }
+
+        .row {
+            font-size: 24px;
+            padding: 10px;
+            border-radius: 10px;
+            min-height: 30px;
+            margin-bottom: 10px;
+        }
+
+        .row1 {
+            background-color: #e7ef9c;
+
+        }
+
+        .plane {
+            position: relative;
+            height: 72px;
+            width: 60px;
+            bottom: 10px;
+            left: 0;
+            top: 0;
+        }
+
+        .plane::before {
+            position: absolute;
+            left: 16px;
+            top: 14px;
+            content: attr(data-n);
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background-color: rgb(255, 255, 255, 0.8);
+            z-index: 1;
+            text-align: center;
+        }
+        .plane img {
+            transform: rotate(90deg);
+        }
+
+        .plane img.left {
+            transform: rotate(-90deg);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="row row2">
+            <button id="btn1">1 號動</button>
+            <button id="btn2">2 號動</button>
+            <button id="btn3">2 號停</button>
+            <button id="btn4">3 啟動</button>
+            <button id="btn5">4-5-6 依序動</button>
+        </div>
+        <div class="row row1">
+            <div class="plane" data-n="1">
+                <img src="https://sagedaben.com/iSpan/images/plane.png" alt="">
+            </div>
+            <div class="plane" data-n="2">
+                <img src="https://sagedaben.com/iSpan/images/plane.png" alt="">
+            </div>
+            <div class="plane" data-n="3">
+                <img src="https://sagedaben.com/iSpan/images/plane.png" alt="">
+            </div>
+            <div class="plane" data-n="4">
+                <img src="https://sagedaben.com/iSpan/images/plane.png" alt="">
+            </div>
+            <div class="plane" data-n="5">
+                <img src="https://sagedaben.com/iSpan/images/plane.png" alt="">
+            </div>
+            <div class="plane" data-n="6">
+                <img src="https://sagedaben.com/iSpan/images/plane.png" alt="">
+            </div>
+        </div>
+    </div>    
+    <script>
+        $("#btn1").on("click", (e)=>{
+            $(".plane").eq(0).animate({                
+                // top: 100,
+                // left: 520 //不需要單位  
+                left: $(".row1").width() - $(".plane").eq(0).width()              
+            },{
+                duration: 2000,
+                easing: "linear"
+            }) //JQuery物件才有辦法使用animate()
+            //物件左邊的屬性值一定是字串，可以不用加""
+        })
+
+        $("#btn2").on("click", (e)=>{
+            p2Right(1)
+        })
+
+        $("#btn3").on("click", (e)=>{
+            $(".plane").eq(1).stop(); //找到要animate停止的目標
+        })
+
+        $("#btn4").on("click", (e)=>{
+            p2Right(2);
+        })
+
+        $("#btn5").on("click", (e)=>{
+            p2Right2(3); //第4架飛機索引值3
+        })
+
+        //使用套件 Pause https://tobia.github.io/Pause/
+        $(".plane").eq(2)
+        .on("mouseenter", (e)=>{
+            $(e.currentTarget).pause();
+        })
+        .on("mouseleave", (e)=>{
+            $(e.currentTarget).resume();
+        })
+
+        function p2Left(num){
+            $(".plane").eq(num).find("img").addClass("left")
+            $(".plane").eq(num).animate({
+                left: 0
+            },{
+                duration: 2000,
+                easing: "linear",
+                complete: ()=>{
+                    p2Right(num)
+                }
+            })
+        }
+
+        function p2Right(num){
+            $(".plane").eq(num).find("img").removeClass("left");
+            $(".plane").eq(num).animate({
+                left: $(".row1").width() - $(".plane").eq(num).width()
+            },{
+                duration: 2000,
+                easing: "linear",
+                complete: ()=>{
+                    p2Left(num)
+                }
+            })
+        }
+
+        function p2Right2(num){
+            if($(".plane").eq(num).length === 0){
+                return false;
+            }
+
+            $(".plane").eq(num).find("img").removeClass("left");
+            $(".plane").eq(num).animate({
+                left: $(".row1").width() - $(".plane").eq(num).width()
+            },{
+                duration: 2000,
+                easing: "linear",
+                // step: ()=>{},
+                complete: ()=>{
+                    p2Right2(num+1)//只執行一次(因為不會去複製)
+                    p2Left(num);
+                }
+            })
+        }
+
+    </script>
+</body>
+
+</html>

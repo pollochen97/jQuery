@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+        integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        .game {
+            position: relative;
+            width: 480px;
+            height: 360px;
+            overflow: hidden;
+            .bgi {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+                height: 100%;
+                background-image: url(/images/universe1.png);
+                animation-name: bgiAni;
+                animation-duration: 1s;
+                animation-iteration-count: infinite;
+                animation-timing-function: step-start;
+            }
+
+            .myPlane {
+                position: absolute;
+                left: 0;
+                right: 0;
+                margin: auto;
+                bottom: 10px;
+                filter: drop-shadow(3px 3px 6px rgb(219, 255, 12));
+                z-index: 999;
+            }
+
+            .bullet {
+                position: absolute;
+                left: 0;
+                right: 0;
+                width: 24px;
+                height: 25px;
+                margin: auto;
+                bottom: 50px;
+            }
+            .enemy {
+                position: absolute;
+                width: 88px;
+                height: 64px;
+                left: 0;
+                right: 0;
+                margin: auto;
+                top: -70px;
+                /* left: -200px; */
+                animation-name: enemyAni;
+                animation-iteration-count: 1;
+                animation-timing-function: linear;
+                animation-duration: 4s;
+                animation-fill-mode: forwards;
+            }
+            .score-style {
+                width: 400px;
+                position: absolute;
+                left: 20px;
+                top: 20px;
+                color: yellow;
+                letter-spacing: 2px;
+            }
+
+            .explo {
+                position: absolute;
+                left: 0;
+                right: 0;
+                margin: auto;
+                width: 128px;
+                height: 128px;
+                background: url(/images/explosion/explo-0.png);
+                animation-name: explosion;
+                animation-duration: 1s;
+                animation-iteration-count: 1;
+                animation-timing-function: step-start;
+                animation-fill-mode: forwards;
+            }
+        }
+
+        @keyframes bgiAni {
+            0% {
+                background-image: url(/images/universe1.png);
+            }
+
+            50% {
+                background-image: url(/images/universe2.png);
+            }
+
+            100% {
+                background-image: url(/images/universe1.png);
+            }
+        }
+
+        @keyframes explosion {
+            0% {
+                background-position: -0px -0px;
+            }
+
+            6.25% {
+                background-position: -128px -0px;
+            }
+
+            12.5% {
+                background-position: -256px -0px;
+            }
+
+            18.75% {
+                background-position: -384px -0px;
+            }
+
+            25% {
+                background-position: -512px -0px;
+            }
+
+            31.25% {
+                background-position: -640px -0px;
+            }
+
+            37.5% {
+                background-position: -768px -0px;
+            }
+
+            43.75% {
+                background-position: -896px -0px;
+            }
+
+            50% {
+                background-position: -1024px -0px;
+            }
+
+            56.25% {
+                background-position: -1152px -0px;
+            }
+
+            62.5% {
+                background-position: -1280px -0px;
+            }
+
+            68.75% {
+                background-position: -1408px -0px;
+            }
+
+            75% {
+                background-position: -1536px -0px;
+            }
+
+            81.25% {
+                background-position: -1664px -0px;
+            }
+
+            87.5% {
+                background-position: -1792px -0px;
+            }
+
+            93.75% {
+                background-position: -1920px -0px;
+            }
+
+            100% {
+                background-position: -1920px -0px;
+            }
+        }
+
+        .bgi {
+            animation: bgiAnu 10s infinite;
+        }
+
+
+
+        .object-fit-cover {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+    </style>
+    <title>Document</title>
+</head>
+
+<body>
+    <div class="game">
+        <div class="bgi"></div>
+        <img class="myPlane" src="/images/plane1.png" alt="">
+        <!-- <div class="bullet">
+            <img src="./images/bullet1.png" alt="">
+        </div> -->
+        <!-- <div class="enemy enemy1">
+            <img src="/images/plane2.png" alt="">
+        </div> -->
+        <div class="score-style">
+            <i class="fa-solid fa-star">score:<span class="score"> 0</span></i>
+        </div>
+        <!-- <div class="explo explo1"></div> -->
+    </div>
+
+
+
+
+
+    <script src="/js/jquery-3.7.1.min.js"></script>
+    <script>
+        /* 設計遊戲開始 */
+
+        // 飛機座標
+        let x = 0;
+        let y = 0;
+        // 子彈數量
+        let bn = 0
+        // 敵人數量
+        let en = 0
+        // 爆炸數量
+        let exn = 0
+
+        // 分數
+        let score = 0
+
+        let keysPressed = {}
+
+        let canShoot = true
+
+        // 1.設置飛機的鍵盤事件 方向 發射子彈
+        $(window).on("keyup", (e) => {
+            delete keysPressed[e.which];
+
+        }).on("keydown", (e) => {
+            keysPressed[e.which] = true;
+
+
+        });
+
+
+        /* 讓動畫變得滑順的魔法! */
+
+        /* window.requestAnimationFrame() 方法。這種方法是在編寫動畫（特別是遊戲中的動畫）時常用的一種技術。以下解釋一下這段代碼的工作原理：
+        
+        gameLoop() 函數的調用：這個函數被調用時，它會創建一個迴圈，這個迴圈用於不斷更新和渲染遊戲的狀態。
+        
+        window.requestAnimationFrame(gameLoop)：這行代碼是迴圈的核心。requestAnimationFrame 是一個瀏覽器提供的方法，用於告訴瀏覽器你希望執行一個動畫，並請求瀏覽器在下次重繪之前調用指定的函數來更新動畫。這個方法接受一個回調函數作為參數，在這個例子中，回調函數就是 gameLoop 本身。 */
+        gameLoop()
+
+        /* 設置敵人 */
+        setEnemy()
+
+        // 設置敵人的出現時間
+        setInterval(() => {
+            setEnemy()
+        }, 100)
+
+        function setEnemy() {
+            // 設置敵人位置 -2 -1 0 1 2 ; 5個位置(隨機)
+            // 180是水平軸單位
+            let posiX = (Math.floor(Math.random() * 5) - 2) * 180
+            en++;
+            let template = `
+            <div class="enemy enemy${en}">
+            <img src="/images/plane2.png" alt="">
+        </div>`;
+            $(".game").append(template);
+            $(".game .enemy" + en).css("left", posiX);
+            $(".game .enemy" + en).animate({
+                // 位置
+                top: 400
+            }, {
+                // 動畫效果
+                duration: 4000,
+                easing: "linear",
+                complete: function () {
+                    $(this).remove();
+                }
+            })
+        }
+
+        function gameLoop() {
+            if (keysPressed[37]) {
+                // 向左
+                x -= 10;
+                // 設置邊界
+                x <= -400 ? x = -400 : x
+                $(".myPlane").css("left", x)
+            }
+            if (keysPressed[39]) {
+                // 向右
+                x += 10;
+                // 設置邊界
+                x >= 400 ? x = 400 : x
+                $(".myPlane").css("left", x)
+            }
+            if (keysPressed[38]) {
+                // 向上
+                y += 10;
+                // 設置邊界
+                y >= 300 ? y = 300 : y
+                $(".myPlane").css("bottom", y)
+
+            }
+            if (keysPressed[40]) {
+                // 向下
+                y -= 10;
+                // 設置邊界
+                y <= 0 ? y = 0 : y
+                $(".myPlane").css("bottom", y)
+            }
+
+            if (keysPressed[32]) {
+                // 發射子彈
+                if (canShoot === true) {
+                    canShoot = false
+                    bn++;
+                    let template = `
+                <div class="bullet bullet${bn}">
+                    <img class="object-fit-cover" src="/images/bullet1.png" alt="">
+                </div>
+                `;
+                    // .append() ，用來將參數指定的內容插入到匹配元素集合中每個元素的末尾。在這個例子中，要被追加的內容是 template。
+                    $(".game").append(template);
+                    $(".game .bullet" + bn).css("left", x).css("bottom", y);
+
+                    /* 設計每個子彈動畫  並在動畫結束後刪除 */
+                    $(".game .bullet" + bn).animate(
+                        { bottom: "480px" }, {
+                        duration: 1000,
+                        easing: "swing",
+                        complete: function () {
+                            $(this).remove();
+                        },
+                        step: function () {
+                            let $bullet = $(this);
+                            /* 設置子彈與敵人飛機碰撞後爆炸特效 "位置+爆炸演出" */
+                            $(".enemy").each(function (index, elm) {
+                                let $enemy = $(elm);
+                                if (isOverlap($bullet, $enemy)) {
+                                    let exX = $enemy.css("left");
+                                    let exY = $enemy.css("top");
+                                    $bullet.remove();
+                                    $enemy.remove();
+                                    exn++;
+                                    let template = `
+                                    <div class="explo explo${exn}"></div>`;
+                                    $(".game").append(template)
+                                    $(".game .explo" + exn).css("left", exX).css("top", exY);
+                                    /* 這段 jQuery 代碼的功能是監聽一個帶有特定類名的 HTML 元素上的動畫結束事件（animationend），並在動畫結束後執行特定的操作 */
+                                    // 將爆炸完後特效的div刪除
+                                    $(".game .explo" + exn).on("animationend", function () {
+                                        $(this).remove()
+
+                                        function isOverlap($div, $div2){
+            let x1 = $div.offset().left;
+            let y1 = $div.offset().top;
+            let w1 = $div.outerWidth();
+            let h1 = $div.outerHeight();
+
+            let x2 = $div2.offset().left;
+            let y2 = $div2.offset().top;
+            let w2 = $div2.outerWidth();
+            let h2 = $div2.outerHeight();
+
+            if(
+                x1<x2+w2 &&
+                x1+w1>x2 &&
+                y1<y2+h2 &&
+                y1+h1>y2
+            ){
+                return true;
+            }else{
+                return false;
+            }
+        }
+    </script>
+</body>
+</html>
