@@ -60,7 +60,17 @@
                 right: 0;
                 margin: auto;
                 filter: drop-shadow(2px 2px 8px rgb(109, 32, 172));
-                /* left: -200px; */
+                left: 200px;
+            }
+            .score-style{
+                position: absolute;
+                left: 330px;
+                right: 0;
+                top: -45px;
+                z-index: 1;
+                color: lightskyblue;
+                font-size: 40px;
+                font-family: sans-serif;
             }
         }
 
@@ -86,6 +96,7 @@
         <div class="bgi">
             <!-- 用來放背景圖 -->
         </div>
+        
         <img class="myPlane" src="./遊戲1用圖/自己的飛機.png" alt="">
         <!-- <div class="bullet">
             <img src="./遊戲1用圖/自己的子彈.png" alt="">
@@ -95,6 +106,9 @@
         <!-- <div class="enemy enemy1">
             <img src="./遊戲1用圖/敵人的飛機.png" alt="">
         </div> -->
+        <div class="score-style">
+            <h6><i class="fa-solid fa-plane-up"></i> score:<span class="score">0</span></h6>
+        </div>
     </div>
     <script src="./js/jquery-3.7.1.min.js"></script>
     <script>
@@ -103,7 +117,7 @@
         let en = 0; //敵人飛機！
         let keysPressed = {};
         let canShoot = true;
-        let score = 0; //分數
+        let score = 0;
 
         $(window).on("keyup", (e) => {
 
@@ -112,7 +126,8 @@
         }).on("keydown", (e) => {
             keysPressed[e.which] = true; //值是甚麼不重要，有屬性才重要 
         });
-    
+
+        // let aaa = 0;
         gameLoop();
         setEnemy();
         setInterval(()=>{
@@ -174,31 +189,38 @@
                 $(".game").append(template);
                 $(".game .bullet" + bn).css("left", x);
                 $(".game .bullet" + bn).animate(
-                    { bottom: 480 },{
+                    //bottom 裡面可以放480px或480
+                    { bottom: 480 }, {
                         duration: 1000,
                         easing: "linear",
-                        complete: function(){
-                            $(this).remove();
-                        },
-                        step: function(){
-                            let $bullet = $(this);
-                            $(".enemy").each(function(index, elm){
-                                let $enemy = $(elm);
-                                if(isOverlap($bullet, $enemy)){
-                                    $bullet.remove();
-                                    $enemy.remove();
-                                    score++;
-                                }
-                            })
-                        }
-                    } 
-                )                   
+                        complete:  function (){
+                        $(this).remove();
+                    },
+                    step: function(){
+                        let $bullet = $(this);
+                        $(".enemy").each(function(index, elm){
+                            let $enemy = $(elm);//elm傳進來是html的物件，要再轉一次
+                            if(isOverLap($bullet, $enemy)){
+                                $bullet.remove(); //移除子彈
+                                $enemy.remove(); //移除敵人飛機
+                                //在這裡飛機可以被打掉了
+                                //碰撞的當下我們就要將飛機移除，才不會導致分數一直增加計算
+                                //加入分數、爆炸畫面也是在這邊
+                                score++;                      $(".score").text(score);
+                                
+                            }
+                        })
+                    }
+                    }                   
+                   
+                );
                 setTimeout(()=>{
                     canShoot = true;
                 }, 120)
                 }
-                
+                canShoot = false;
             }
+
             requestAnimationFrame(gameLoop);
         }
 
@@ -226,7 +248,6 @@
                 return false;
             }
         }
-
     </script>
 </body>
 
