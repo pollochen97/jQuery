@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+        integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <title>Test Game</title>
+    <!-- 快速鍵應用 ctrl+S shift 會參照電腦的更新速度 -->
+    <!-- 使用一個gameLoop()是不會當機的無限迴圈 -->
+    <!-- window.requestAnimationFrame(gameLoop); -->
+    <style>
+        .game {
+            position: relative;
+            /* 要做中心點對位的div會加上position */
+            width: 480px;
+            height: 360px;
+            overflow: hidden;
+
+            .bgi {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+                height: 100%;
+                background-image: url(./遊戲1用圖/宇宙1.png);
+                animation-name: bgiAni;
+                animation-duration: .7s;
+                animation-iteration-count: infinite;
+                animation-timing-function: step-start;
+            }
+
+            .myPlane {
+                position: absolute;
+                left: 0;
+                right: 0;
+                margin: auto;
+                bottom: 10px;
+                filter: drop-shadow(2px 2px 8px yellow);
+                z-index: 1;
+            }
+
+            .bullet {
+                position: absolute;
+                left: 0;
+                right: 0;
+                width: 24px;
+                height: 25px;
+                margin: auto;
+                bottom: 30px;
+                filter: drop-shadow(1px 1px 2px rgb(255, 255, 255));
+            }
+
+            .enemy {
+                position: absolute;
+                width: 88px;
+                height: 64px;
+                top: -70px;
+                left: 0;
+                right: 0;
+                margin: auto;
+                filter: drop-shadow(2px 2px 8px rgb(109, 32, 172));
+                left: 200px;
+            }
+
+            .score-style {
+                position: absolute;
+                left: 330px;
+                right: 0;
+                top: -45px;
+                z-index: 1;
+                color: lightskyblue;
+                font-size: 40px;
+                font-family: sans-serif;
+            }
+            .explo{
+                position: absolute;
+                left: 0;
+                right: 0;
+                margin: auto;
+                width: 128px;
+                height: 128px;
+                background-image: url(./遊戲1用圖/ee.png);
+                animation-name: explosion;
+                animation-duration: 1s;
+                animation-iteration-count: 1;
+                animation-timing-function: step-start; 
+                animation-fill-mode: forwards;
+                /* 停留在最後一張圖(本來在第一個網格) */
+                
+            }
+        }
+
+        @keyframes bgiAni {
+            0% {
+                background-image: url(./遊戲1用圖/宇宙1.png);
+            }
+
+            50% {
+                background-image: url(./遊戲1用圖/宇宙2.png);
+            }
+
+            100% {
+                background-image: url(./遊戲1用圖/宇宙1.png);
+            }
+        }
+
+        /* 利用chatGPT將texturePacker的css轉成keyframes */
+        @keyframes explosion {
+            0% {
+                background-position: -1px -1px;
+            }
+
+            6.25% {
+                background-position: -1px -131px;
+            }
+
+            12.5% {
+                background-position: -131px -1px;
+            }
+
+            18.75% {
+                background-position: -1px -261px;
+            }
+
+            25% {
+                background-position: -131px -131px;
+            }
+
+            31.25% {
+                background-position: -261px -1px;
+            }
+
+            37.5% {
+                background-position: -131px -261px;
+            }
+
+            43.75% {
+                background-position: -261px -131px;
+            }
+
+            50% {
+                background-position: -391px -1px;
+            }
+
+            56.25% {
+                background-position: -261px -261px;
+            }
+
+            62.5% {
+                background-position: -391px -131px;
+            }
+
+            68.75% {
+                background-position: -521px -1px;
+            }
+
+            75% {
+                background-position: -391px -261px;
+            }
+
+            81.25% {
+                background-position: -521px -131px;
+            }
+
+            87.5% {
+                background-position: -651px -1px;
+            }
+
+            93.75% {
+                background-position: -521px -261px;
+            }
+
+            100% {
+                background-position: -651px -1px;
+            }
+        }
+
+        /* .explosion {
+            width: 128px;
+            height: 128px;
+            animation: explosion 1s steps(16) infinite;
+        } */
+
+    </style>
+</head>
+
+<body>
+    <div class="game">
+        <!-- 建立一個外框來放內容 -->
+        <div class="bgi">
+            <!-- 用來放背景圖 -->
+        </div>
+
+        <img class="myPlane" src="./遊戲1用圖/自己的飛機.png" alt="">
+        <!-- 爆炸的樣板 -->
+        <!-- <div class="explo explo1"></div> -->
+
+        <!-- 待會的樣板:程式產生敵人飛機 -->
+        <!-- <div class="enemy enemy1">
+            <img src="./遊戲1用圖/敵人的飛機.png" alt="">
+        </div> -->
+        <div class="score-style">
+            <h6><i class="fa-solid fa-plane-up"></i> score:<span class="score">0</span></h6>
+        </div>
+    </div>
+    <script src="./js/jquery-3.7.1.min.js"></script>
+    <script>
+        let x = 0; //飛機的x座標
+        let bn = 0; //子彈的數量
+        let en = 0; //敵人飛機！
+        let exn = 0; //爆炸的數量
+        let keysPressed = {};
+        let canShoot = true;
+        let score = 0;
+
+        $(window).on("keyup", (e) => {
+
+            delete keysPressed[e.which];
+
+        }).on("keydown", (e) => {
+            keysPressed[e.which] = true; //值是甚麼不重要，有屬性才重要 
+        });
+
+        // let aaa = 0;
+        gameLoop();
+        setEnemy();
+        setInterval(() => {
+            setEnemy()
+        }, 600);
+
+        function setEnemy() {
+            let posiX = (Math.floor(Math.random() * 4) - 2) * 180;
+            //-2,-1,0,1,2 是軌道們
+            //每個間格180px
+            en++;
+            let template =
+                `<div class="enemy enemy${en}">
+                <img src="./遊戲1用圖/敵人的飛機.png" alt="">
+                </div>`;
+            $(".game").append(template);
+            $(".game .enemy" + en).css("left", posiX);
+            $(".game .enemy" + en).animate({
+                top: 400
+
+            }, {
+                duration: 4000,
+                easing: "linear",
+                complete: function () {
+                    $(this).remove();
+                }
+            });
+        }
+
+        function gameLoop() {
+            // aaa++;
+            // console.log(aaa);
+            //console.log(keysPressed);
+            if (keysPressed[37]) {
+                //37向左
+                x -= 10;
+                if (x <= -400) {
+                    x = -400;
+                }
+                $(".myPlane").css("left", x);
+            }
+            if (keysPressed[39]) {
+                //39向右
+                x += 10;
+                if (x >= 400) {
+                    x = 400;
+                }
+                $(".myPlane").css("left", x);
+            }
+            if (keysPressed[32]) {
+                //空白鍵是32：發射子彈
+                if (canShoot === true) {
+                    canShoot = false; //中斷子彈
+                    bn++;
+                    let template = `
+                <div class="bullet bullet${bn}">
+                <img src="./遊戲1用圖/自己的子彈.png" alt="">
+                </div>`;
+                    $(".game").append(template);
+                    $(".game .bullet" + bn).css("left", x);
+                    $(".game .bullet" + bn).animate(
+                        //bottom 裡面可以放480px或480
+                        { bottom: 480 }, {
+                        duration: 1000,
+                        easing: "linear",
+                        complete: function () {
+                            $(this).remove();
+                        },
+                        step: function () {
+                            let $bullet = $(this);
+                            $(".enemy").each(function (index, elm) {
+                                let $enemy = $(elm);//elm傳進來是html的物件，要再轉一次
+                                if (isOverLap($bullet, $enemy)) {
+                                    let exx = $enemy.css("left"); //取得X座標
+                                    let exy = $enemy.css("top"); //取得Y座標
+                                    $bullet.remove(); 
+                                    $enemy.remove(); 
+
+                                    exn++;
+                                    let template = `<div class="explo explo${exn}"></div>`
+                                    //這個樣板比較小，也可以用append的方式把內容放進去!
+                                    //這種自動生成的東西，很佔記憶體!我們沒有把它清掉
+                                    //當數量來到了1028電腦就會開始緩慢，之後電腦就會當掉(電腦會有生成上限，所以做遊戲時要特別小心)
+
+                                    $(".game").append(template);
+                                    $(".game .explo"+exn).css("left", exx); //找到當前的爆炸x座標
+                                    $(".game .explo"+exn).css("top", exy); //找到當前的爆炸y座標
+                                    //爆炸的殘渣還在，要透過CSS把動畫播完的殘渣來清除掉
+                                    $(".game .explo"+exn).on("animationend", function(){
+                                        $(this).remove();
+                                    }) //打開F12檢查div class="explo"有沒有消失
+
+                                    score++; 
+                                    $(".score").text(score);
+
+                                }
+                            })
+                        }
+                    }
+
+                    );
+                    setTimeout(() => {
+                        canShoot = true;
+                    }, 120)
+                }
+                canShoot = false;
+            }
+
+            requestAnimationFrame(gameLoop);
+        }
+
+        function isOverLap($div, $div2) {
+            let x1 = $div.offset().left;
+            let y1 = $div.offset().top;
+            let w1 = $div.outerWidth(); //包含border
+            let h1 = $div2.outerHeight();
+
+            let x2 = $div2.offset().left;
+            let y2 = $div2.offset().top;
+            let w2 = $div2.outerWidth(); //包含border
+            let h2 = $div2.outerHeight();
+
+            if (
+                x1 < x2 + w2 &&
+                x1 + w1 > x2 &&
+                y1 < y2 + h2 &&
+                y1 + h1 > y2
+            ) {
+                //console.log("有重疊");
+                return true;
+            } else {
+                //console.log("沒有重疊");
+                return false;
+            }
+        }
+    </script>
+</body>
+
+</html>
