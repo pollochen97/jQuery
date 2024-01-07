@@ -68,7 +68,7 @@
 </head>
 <body>
     <div class="container">
-        <form action="aaa.php">
+        <form action="">
             <div class="row row1">
                 <button type="submit">送出按鈕</button>
                 <input type="submit" value="送出input">
@@ -156,7 +156,51 @@
                 submitCheck = false;
                 $("select").closest(".row").addClass("empty");
             }
+
+            //check end
+            //console.log($(this).closest("form"));
+            if(submitCheck == true){
+                $("form").submit();
+            }
         })
+
+        //改善UX感受：改變之後變動表單顏色
+        $("input[type=text]").on("keyup", function(){
+            if($(this).val() !== ""){
+                $(this).closest(".row").removeClass("empty");
+            }else{
+                $(this).closest(".row").addClass("empty");
+            }
+        })        
+        $("input[type=checkbox]").on("change", function(){
+            if($("input[type=checkbox]:checked").length !== 0){
+                $(this).closest(".row").removeClass("empty");
+            }else{
+                $(this).closest(".row").addClass("empty");
+            }
+        })
+        $("input[type=radio]").on("change", function(){
+            if($("input[type=radio]:checked").length !== 0){
+                $(this).closest(".row").removeClass("empty");
+            }else{
+                $(this).closest(".row").addClass("empty");
+            }
+        })
+        $("textarea").on("keyup", function(){
+            if($(this).val() !== ""){
+                $(this).closest(".row").removeClass("empty");
+            }else{
+                $(this).closest(".row").addClass("empty");
+            }
+        })
+        $("select").on("change", function(){
+            if($(this).val() !== null){
+                $(this).closest(".row").removeClass("empty");
+            }else{
+                $(this).closest(".row").addClass("empty");
+            }
+        })
+        
     </script>
 </body>
 </html>
