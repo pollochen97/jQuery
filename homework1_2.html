@@ -117,6 +117,8 @@
         //獲取所有帶有".row"的元素：返回的是一個nodeList
         //沒辦法在這個rows上面直接加上addEventListener，需要遍歷rows成個別元素分別添加監聽器
         let rows = document.querySelectorAll(".row");
+        let submit = document.getElementById("submit");
+        let input1 = document.querySelector("#input1");
 
         //為每個元素addEventListener
         rows.forEach(function(row){
@@ -129,8 +131,7 @@
         }, true);
         });
 
-        //設定表單驗證、驗證成功前不可送出表單
-        let sumbit = document.getElementById("submit");
+        //設定表單驗證、驗證成功前不可送出表單        
         submit.addEventListener("click", (e)=>{
             e.preventDefault();
             let submitCheck = true;
@@ -138,6 +139,9 @@
             //reset
 
             //check start
+            if(){
+                submitCheck = false;
+            }
 
             //check end
 
@@ -145,7 +149,7 @@
         })
 
         //UX upgrade
-        
+
         
 
         // $("[type=submit]").on("click", (e)=>{
