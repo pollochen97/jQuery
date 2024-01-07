@@ -66,9 +66,9 @@
 </head>
 <body>
     <div class="container">
-        <form action="">
+        <form action="/submit-form" id="form">
             <div class="row row1">
-                <button id="submit" type="submit">送出按鈕</button>
+                <button id="submitbtn" type="submit">送出按鈕</button>
                 <input id="submit" type="submit" value="送出input">
             </div>
             <div class="row row2">
@@ -115,10 +115,18 @@
     <script>
         //focusin & fousout 在表單中每個輸入欄位中
         //獲取所有帶有".row"的元素：返回的是一個nodeList
-        //沒辦法在這個rows上面直接加上addEventListener，需要遍歷rows成個別元素分別添加監聽器
+        //沒辦法在這個rows上面直接加上addEventListener，需要遍歷rows成個別元素分別添加監聽器        
         let rows = document.querySelectorAll(".row");
-        let submit = document.getElementById("submit");
+        let submitbtn = document.getElementById("submitbtn");
+        let inputs = document.querySelectorAll("input");
+        let textarea = document.querySelector("textarea");
+        let selectElms = document.querySelectorAll("select");        
+        let checkboxes = document.querySelectorAll("input[type='checkbox']"); //checkbox要加上引號！
+        let radios = document.querySelectorAll("input[type='radio']");
         let input1 = document.querySelector("#input1");
+        let input4 = document.querySelector("#input4");        
+        let row3 = document.querySelector(".row3");
+        let row4 = document.querySelector(".row4");
 
         //為每個元素addEventListener
         rows.forEach(function(row){
@@ -132,102 +140,118 @@
         });
 
         //設定表單驗證、驗證成功前不可送出表單        
-        submit.addEventListener("click", (e)=>{
-            e.preventDefault();
-            let submitCheck = true;
-
+        submitbtn.addEventListener("click", (e)=>{
+            e.preventDefault();            
+            let submitCheck = true;            
+            let checkboxChecked = Array.from(checkboxes).filter(function(checkbox){
+                return checkbox.checked;
+            }); //Array.from把nodeList變成陣列，用filter找出checked的選項            
+            let radioChecked = Array.from(radios).filter(function(radio){
+                return radio.checked;
+            });        
             //reset
+            inputs.forEach(function(input){
+                //先用一個參數接住最近的父級Div元素
+                let closestDiv = input.closest("div");
+                if(closestDiv){
+                    closestDiv.classList.remove("empty");
+                }
+            });  
+            textarea.closest("div").classList.remove("empty");            
 
             //check start
-            if(){
+            if(input1.value == ""){
                 submitCheck = false;
+                input1.closest("div").classList.add("empty");
+            }
+            if(checkboxChecked.length === 0){
+                submitCheck = false;
+                row3.classList.add("empty");
+            }else{
+                row3.classList.remove("empty");
             }
 
+            if(radioChecked.length === 0){
+                submitCheck = false;
+                row4.classList.add("empty");
+            }else{
+                row4.classList.remove("empty");
+            }
+
+            if(input4.value == ""){
+                submitCheck = false;
+                input4.closest("div").classList.add("empty");
+            }
+            selectElms.forEach(function(select){
+                //select reset
+                select.closest("div").classList.remove("empty");
+                if(select.value === ""){
+                    submitCheck = false;
+                    select.closest("div").classList.add("empty")
+                }
+            });    
             //check end
-
-
+            //送不出去 說是document.querySelector(...).submit is not a function
+            if(submitCheck === true){
+                console.log("表單驗證成功");
+                document.querySelector("#form").submit();
+                // submitbtn.submit();
+            }
         })
-
+        
         //UX upgrade
-
+        input1.addEventListener("keyup", function(){
+            if(input1.value !== ""){
+                input1.closest(".row").classList.remove("empty");
+            }else{
+                input1.closest(".row").classList.add("empty");
+            }            
+        });           
+        checkboxes.forEach(function(checkbox1){
+            checkbox1.addEventListener("change", function(){
+                // console.log(checkbox);
+                let checkboxChecked = Array.from(checkboxes).filter(function(checkbox){
+                return checkbox.checked;
+                });
+                if(checkboxChecked.length !== 0){
+                    row3.classList.remove("empty");
+                }else{
+                    row3.classList.add("empty");
+                }
+            })
+        });
+        radios.forEach(function(radio1){
+            radio1.addEventListener("change", function(){
+                let radioChecked = Array.from(radios).filter(function(radio){
+                return radio.checked;
+            });  
+            if(radioChecked.length !== 0){
+                row4.classList.remove("empty");
+            }else{
+                row4.classList.add("empty");
+            }
+            })
+        });
+        input4.addEventListener("keyup", function(){
+            if(input4.value !== ""){
+                input4.closest(".row").classList.remove("empty");
+            }else{
+                input4.closest(".row").classList.add("empty");
+            }            
+        });
+        selectElms.forEach(function(select){                
+            select.addEventListener("change", function(){
+                if(select.value !== null){                    
+                    select.closest("div").classList.remove("empty");
+                }else{
+                    select.closest("div").classList.add("empty");
+                }
+            })                
+        });   
         
 
-        // $("[type=submit]").on("click", (e)=>{
-        //     e.preventDefault(); //阻止表單送出
-        //     let submitCheck = true; //測定變數來檢核表單（人性本善）
-
-        //     //reset
-        //     $("input").closest(".row").removeClass("empty");
-        //     $("textarea").closest(".row").removeClass("empty");
-        //     $("select").closest(".row").removeClass("empty");
-
-        //     //check start
-        //     if($("input[type=text]").val() == ""){
-        //         submitCheck = false;
-        //         $("input[type=text]").closest(".row").addClass("empty");
-        //     }
-        //     if($("textarea").val() == ""){
-        //         submitCheck = false;
-        //         $("textarea").closest(".row").addClass("empty");
-        //     }
-        //     if($("input[type=checkbox]:checked").length === 0){
-        //         submitCheck = false;
-        //         $("input[type=checkbox]").closest(".row").addClass("empty");
-        //     }
-        //     if($("input[type=radio]:checked").length === 0){
-        //         submitCheck = false;
-        //         $("input[type=radio]").closest(".row").addClass("empty");
-        //     }
-        //     if($("select").val() === null){
-        //         //以後選項很多可以用select[]方式選出，或是用ID來尋找
-        //         submitCheck = false;
-        //         $("select").closest(".row").addClass("empty");
-        //     }
-
-        //     //check end
-        //     //console.log($(this).closest("form"));
-        //     if(submitCheck == true){
-        //         $("form").submit();
-        //     }
-        //})
-
-        //改善UX感受：改變之後變動表單顏色
-        // $("input[type=text]").on("keyup", function(){
-        //     if($(this).val() !== ""){
-        //         $(this).closest(".row").removeClass("empty");
-        //     }else{
-        //         $(this).closest(".row").addClass("empty");
-        //     }
-        // })        
-        // $("input[type=checkbox]").on("change", function(){
-        //     if($("input[type=checkbox]:checked").length !== 0){
-        //         $(this).closest(".row").removeClass("empty");
-        //     }else{
-        //         $(this).closest(".row").addClass("empty");
-        //     }
-        // })
-        // $("input[type=radio]").on("change", function(){
-        //     if($("input[type=radio]:checked").length !== 0){
-        //         $(this).closest(".row").removeClass("empty");
-        //     }else{
-        //         $(this).closest(".row").addClass("empty");
-        //     }
-        // })
-        // $("textarea").on("keyup", function(){
-        //     if($(this).val() !== ""){
-        //         $(this).closest(".row").removeClass("empty");
-        //     }else{
-        //         $(this).closest(".row").addClass("empty");
-        //     }
-        // })
-        // $("select").on("change", function(){
-        //     if($(this).val() !== null){
-        //         $(this).closest(".row").removeClass("empty");
-        //     }else{
-        //         $(this).closest(".row").addClass("empty");
-        //     }
-        // })
         
+            
     </script>
 </body>
 </html>
