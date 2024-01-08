@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">   
+    <title>Homework1_2 原生JS寫法</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            width: 600px;
+        }
+
+        .row {
+            display: flex;
+            padding: 10px;
+            background-color: #c6c5c5;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            font-size: 20px;
+        }
+
+        .active {
+            background-color: #f6b46d;
+        }
+
+        .empty {
+            background-color: #e34a0d;
+            color: #fff;
+        }
+
+        label {
+            min-width: 50px;
+            padding-left: 5px;
+            padding-right: 20px;
+        }
+
+        input[type=text],
+        select {
+            width: 100%;
+            border: none;
+        }
+
+        select {
+            font-size: 20px;
+        }
+
+        textarea {
+            width: 100%;
+            height: 50px;
+            border: none;
+        }
+
+        .row1 {
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        button {
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <form action="/submit-form" id="form">
+            <div class="row row1">
+                <button id="submitbtn" type="submit">送出按鈕</button>
+                <input id="submit" type="submit" value="送出input">
+            </div>
+            <div class="row row2">
+                <label for="input1" name="input1">input1</label>
+                <input id="input1" type="text">
+            </div>
+            <div class="row row3">
+                <input id="input2_1" type="checkbox" name="input2" value="c1">
+                <label for="input2_1">input2_1</label>
+                <input id="input2_2" type="checkbox" name="input2" value="c2">
+                <label for="input2_2">input2_2</label>
+                <input id="input2_3" type="checkbox" name="input2" value="c3">
+                <label for="input2_3">input2_3</label>
+                <input id="input2_4" type="checkbox" name="input2" value="c4">
+                <label for="input2_4">input2_4</label>
+            </div>
+            <div class="row row4">
+                <input id="input3_1" type="radio" name="input3" value="r1">
+                <label for="input3_1">input3_1</label>
+                <input id="input3_2" type="radio" name="input3" value="r2">
+                <label for="input3_2">input3_2</label>
+                <input id="input3_3" type="radio" name="input3" value="r3">
+                <label for="input3_3">input3_3</label>
+                <input id="input3_4" type="radio" name="input3" value="r4">
+                <label for="input3_4">input3_4</label>
+            </div>
+            <div class="row row4">
+                <label for="input4">input4</label>
+                <textarea name="input4" id="input4"></textarea>
+            </div>
+            <div class="row row5">
+                <label for="input5">input5</label>
+                <select name="input5" id="input5">
+                    <option value disabled selected>請選擇</option>
+                    <option value="1">input5_1</option>
+                    <option value="2">input5_2</option>
+                    <option value="3">input5_3</option>
+                    <option value="4">input5_4</option>
+                    <option value="5">input5_5</option>
+                </select>
+            </div>
+        </form>
+    </div>
+    <script>
+        //focusin & fousout 在表單中每個輸入欄位中
+        //獲取所有帶有".row"的元素：返回的是一個nodeList
+        //沒辦法在這個rows上面直接加上addEventListener，需要遍歷rows成個別元素分別添加監聽器        
+        let rows = document.querySelectorAll(".row");
+        let submitbtn = document.getElementById("submitbtn");
+        let inputs = document.querySelectorAll("input");
+        let textarea = document.querySelector("textarea");
+        let selectElms = document.querySelectorAll("select");        
+        let checkboxes = document.querySelectorAll("input[type='checkbox']"); //checkbox要加上引號！
+        let radios = document.querySelectorAll("input[type='radio']");
+        let input1 = document.querySelector("#input1");
+        let input4 = document.querySelector("#input4");        
+        let row3 = document.querySelector(".row3");
+        let row4 = document.querySelector(".row4");
+
+        //為每個元素addEventListener
+        rows.forEach(function(row){
+            row.addEventListener("focus", function(){
+            this.classList.add("active");
+        }, true);//使用true來捕獲階段監聽事件
+
+            row.addEventListener("blur", function(){
+            this.classList.remove("active");
+        }, true);
+        });
+
+        //設定表單驗證、驗證成功前不可送出表單        
+        submitbtn.addEventListener("click", (e)=>{
+            e.preventDefault();            
+            let submitCheck = true;            
+            let checkboxChecked = Array.from(checkboxes).filter(function(checkbox){
+                return checkbox.checked;
+            }); //Array.from把nodeList變成陣列，用filter找出checked的選項            
+            let radioChecked = Array.from(radios).filter(function(radio){
+                return radio.checked;
+            });        
+            //reset
+            inputs.forEach(function(input){
+                //先用一個參數接住最近的父級Div元素
+                let closestDiv = input.closest("div");
+                if(closestDiv){
+                    closestDiv.classList.remove("empty");
+                }
+            });  
+            textarea.closest("div").classList.remove("empty");            
+
+            //check start
+            if(input1.value == ""){
+                submitCheck = false;
+                input1.closest("div").classList.add("empty");
+            }
+            if(checkboxChecked.length === 0){
+                submitCheck = false;
+                row3.classList.add("empty");
+            }else{
+                row3.classList.remove("empty");
+            }
+
+            if(radioChecked.length === 0){
+                submitCheck = false;
+                row4.classList.add("empty");
+            }else{
+                row4.classList.remove("empty");
+            }
+
+            if(input4.value == ""){
+                submitCheck = false;
+                input4.closest("div").classList.add("empty");
+            }
+            selectElms.forEach(function(select){
+                //select reset
+                select.closest("div").classList.remove("empty");
+                if(select.value === ""){
+                    submitCheck = false;
+                    select.closest("div").classList.add("empty")
+                }
+            });    
+            //check end
+            //送不出去 說是document.querySelector(...).submit is not a function
+            if(submitCheck === true){
+                console.log("表單驗證成功");
+                document.querySelector("#form").submit();
+                // submitbtn.submit();
+            }
+        })
+        
+        //UX upgrade
+        input1.addEventListener("keyup", function(){
+            if(input1.value !== ""){
+                input1.closest(".row").classList.remove("empty");
+            }else{
+                input1.closest(".row").classList.add("empty");
+            }            
+        });           
+        checkboxes.forEach(function(checkbox1){
+            checkbox1.addEventListener("change", function(){
+                // console.log(checkbox);
+                let checkboxChecked = Array.from(checkboxes).filter(function(checkbox){
+                return checkbox.checked;
+                });
+                if(checkboxChecked.length !== 0){
+                    row3.classList.remove("empty");
+                }else{
+                    row3.classList.add("empty");
+                }
+            })
+        });
+        radios.forEach(function(radio1){
+            radio1.addEventListener("change", function(){
+                let radioChecked = Array.from(radios).filter(function(radio){
+                return radio.checked;
+            });  
+            if(radioChecked.length !== 0){
+                row4.classList.remove("empty");
+            }else{
+                row4.classList.add("empty");
+            }
+            })
+        });
+        input4.addEventListener("keyup", function(){
+            if(input4.value !== ""){
+                input4.closest(".row").classList.remove("empty");
+            }else{
+                input4.closest(".row").classList.add("empty");
+            }            
+        });
+        selectElms.forEach(function(select){                
+            select.addEventListener("change", function(){
+                if(select.value !== null){                    
+                    select.closest("div").classList.remove("empty");
+                }else{
+                    select.closest("div").classList.add("empty");
+                }
+            })                
+        });   
+        
+
+        
+            
+    </script>
+</body>
+</html>
