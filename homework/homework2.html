@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <title>homework2</title>
+        <!-- Required meta tags -->
+        <meta charset="utf-8" />
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1, shrink-to-fit=no"
+        />
+
+        <!-- Bootstrap CSS v5.2.1 -->
+        <link
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+            rel="stylesheet"
+            integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
+            crossorigin="anonymous"
+        />
+        <!-- fontawesome CDN -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+        <style>
+            body {                
+                background-color: #272727;
+            }
+            
+            .row{
+                background-color: #a4a4a4;
+                border-radius: 20px;  
+                padding: 10px;              
+            }            
+        </style>
+    </head>
+
+    <body>
+        <div class="container">
+            <form action="" enctype="multipart/form-data">
+                <div class="rowBig">
+                <div class="row m-3 align-items-center">
+                    <div class="col col-1"><label for="formFile1" class="form-label">1</label></div>
+                    <div class="col col-5"><input class="form-control" type="file" id="formFile1" name="photoFile"><input class="form-control mt-2" type="text" placeholder="檔案1相關描述" name="fileInfo" id="fileInfo1"></div>
+                    <div class="col">
+                        <button class="btn btn-danger" disabled>刪除</button>
+                        <button class="btn btn-dark" id="plus1" ><i class="fa-solid fa-plus"></i></button>
+                    </div>
+                </div>  
+            </div>              
+            </form>
+        </div>
+        
+        <!-- JQuery CDN -->
+        <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+        <script>
+            //建立全域變數給fileNum(n)
+            let fileNum = 1 ;  
+            //利用屬性選擇器（[id^='plus'] 和 [id^='delete']）來進行事件綁定，這種選擇器會匹配所有以 "plus" 或 "delete" 開頭的 ID。這樣做的好處是它能夠適應動態生成的元素。          
+            $(".container").on("click", "button[id^='plus']", function () {
+                fileNum++;
+                let template = `<div class="row m-3 align-items-center">
+                    <div class="col col-1"><label for="formFile${fileNum}" class="form-label">${fileNum}</label></div>
+                    <div class="col col-5"><input class="form-control" type="file" id="formFile${fileNum}" name="photoFile"><input class="form-control mt-2" type="text" placeholder="檔案${fileNum}相關描述" name="fileInfo" id="fileInfo${fileNum}"></div>
+                    <div class="col">
+                        <button class="btn btn-danger" id="delete${fileNum}">刪除</button>
+                        <button class="btn btn-dark" id="plus${fileNum}"><i class="fa-solid fa-plus"></i></button>
+                    </div>`;
+                    $(this).closest(".rowBig").append(template);
+                    // $("button[id^='plus']").not("#plus${fileNum}")
+                    $(this).prop("disabled", true);  
+                    let plusNum = fileNum - 1;
+                    $(`#plus${plusNum}`).addClass("d-none");
+                    maxNumCheck();
+                    //console.log(this);
+                      
+            });
+            $(".container").on("click", "button[id^='delete']", function(){ 
+                $(this).closest(".row").remove();
+                maxNumCheck();
+            });
+
+            //重新檢核最大的數字在哪，清掉殘渣
+            function maxNumCheck(){
+                //重新啟用fileNum數字最大的按鈕
+            let maxNum = 0;
+                $("button[id^='plus']").each(function(){
+                    let num = parseInt(this.id.replace('plus', ''));
+                    if(num > maxNum){
+                        maxNum = num;
+                    }
+                });
+                //先清除所有＋再打開最大值的＋（才不會有殘留的渣渣）
+                $("button[id^='plus']").prop("disabled", true).addClass("d-none");
+                $(`#plus${maxNum}`).prop("disabled", false).removeClass("d-none");
+            }   
+        </script>
+    </body>
+</html>
