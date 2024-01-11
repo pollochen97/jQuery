@@ -18,12 +18,33 @@
             background-color: #f2f2f2;
         }
 
+        .cover{
+            position: fixed;
+            width: 100%;
+            height: 100vh;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: none;
+            .row{
+                & img{
+                    width: 100%;
+                }
+            }
+        }
+        .active1{
+            display: flex;
+        }
+
         ;
     </style>
 </head>
 
 <body>
     <div class="container">
+        <div class="cover active1">
+            <div class="row">
+                <img src="https://travel.tycg.gov.tw/content/images/attractions/10583/640x480_files635866490181114846.jpg" alt="">
+            </div>
+        </div>
         <header>
             <h1 class="display-1 fw-bold">桃園景點100選!</h1>
         </header>
@@ -96,17 +117,16 @@
             $(".detail").on("click", function () {
                 let id = $(this).attr("data-id");
                 // console.log(id);
-                
             })
         });
 
 
 
         //顯示詳細大圖
-        function showBig(n) {
-            let params = { id: n };
+        // function showBig(n) {
+        //     let params = { id: n };
 
-        }
+        // }
 
 
     </script>
