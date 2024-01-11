@@ -21,42 +21,12 @@
             color: #f3f3f3;        
             margin-block: 20px;
         }
-        .cover{
-            position: fixed;
-            width: 100vw;
-            height: 100vh;
-            background-color: rgba(0, 0, 0, 0.8);
-            display: none;
-            .top{
-                    height: calc(100% / 3);
-                    padding: 10px;
-                    & img{
-                        width: 80%;
-                    }
-                }
-            .bottom{
-                    flex: 1;
-                    color: #fff;
-            }
-        }
-        .active1{
-            display: block;
-            z-index: 1;
-        }        
+        ;
     </style>
 </head>
 
 <body>
     <div class="container">
-        <div class="cover">
-            <div class="top col-10">
-                <img src="https://travel.tycg.gov.tw/content/images/attractions/10583/640x480_files635866490181114846.jpg" alt="">
-            </div>            
-            <div class="bottom col-10">
-
-            </div>
-            <button class="btn btn-primary close mt-2">關閉視窗</button>
-        </div>
         <header>
             <h1 class="display-1 fw-bold">桃園景點100選!</h1>
         </header>
@@ -75,7 +45,6 @@
                 </div>
             </div>row -->
         </main>
-        
     </div><!-- container -->
 
     <!-- Bootstrap JavaScript Libraries -->
@@ -97,21 +66,25 @@
 
             //先篩圖片 grep+條件
             let infos = datas.XML_Head.Infos.Info;
-            let taoyuanPlaces = infos.filter(function (info) {
-                return info.Picture1 && info.Region === "桃園市";
+            let hasImgPlaces = infos.filter(function (info) {
+                return info.Picture1;
             });
-            console.log(taoyuanPlaces);
+            // console.log(hasImgPlaces);          
+
+            let taoyuanPlaces = hasImgPlaces.filter(function (info) {
+                return info.Region === "桃園市";
+            });
+            // console.log(taoyuanPlaces);
 
             taoyuanPlaces.forEach((place, index) => {
                 // console.log(place);
-                if(index >= 0 && index <= 99){                
-                let num = index + 1;
+
                 let template = `                
                 <div class="col col-md-3 col-sm-4 col-6">
                     <div class="card mt-3">
                         <img src="${place.Picture1}" class="card-img-top" alt="${place.Add}">
                         <div class="card-body">
-                          <h5 class="card-title"><span class="pe-2">${num}</span>${place.Name}</h5>
+                          <h5 class="card-title">${place.Name}</h5>
                           <p class="card-text">${place.Description
                     }</p>
                           <button class="btn btn-primary detail" data-id="${index}">詳細資料</button>
@@ -120,25 +93,23 @@
                 </div>            
                 `;
                 $("main").append(template);
-            }
 
             });
             //綁定按鈕寫這裡
             $(".detail").on("click", function () {
-                let id = $(this).attr("data-id");            
+                let id = $(this).attr("data-id");
                 // console.log(id);
-                console.log(taoyuanPlaces[id].Picture1);
-                $(".cover img").attr("src", taoyuanPlaces[id].Picture1);                
-                console.log(taoyuanPlaces[id].Toldescribe);
-                $(".cover .bottom").html(`<h1>${taoyuanPlaces[id].Name}</h1>${taoyuanPlaces[id].Toldescribe}`);                
-                $(".cover").addClass("active1", "row");
-            })
-            $(".close").on("click", function(){
-                $(".cover").removeClass("active1");
+                
             })
         });
+
+
+
         //顯示詳細大圖
-        
+        function showBig(n) {
+            let params = { id: n };
+
+        }
 
 
     </script>
