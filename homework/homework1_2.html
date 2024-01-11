@@ -66,10 +66,10 @@
 </head>
 <body>
     <div class="container">
-        <form action="/submit-form" id="form">
+        <form action="" id="form">
             <div class="row row1">
                 <button id="submitbtn" type="submit">送出按鈕</button>
-                <input id="submit" type="submit" value="送出input">
+                <input id="submitInput" type="submit" value="送出input">
             </div>
             <div class="row row2">
                 <label for="input1" name="input1">input1</label>
@@ -191,10 +191,12 @@
                 }
             });    
             //check end
-            //送不出去 說是document.querySelector(...).submit is not a function
+            //解決送不出去的問題
+            //用getElementById("form")抓到表單
+            //修改input type=submit這一個的id
             if(submitCheck === true){
                 console.log("表單驗證成功");
-                document.querySelector("#form").submit();
+                document.getElementById("form").submit();
                 // submitbtn.submit();
             }
         })
