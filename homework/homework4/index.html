@@ -16,13 +16,25 @@
 </head>
 
 <body>
-    <header>
-        <!-- place navbar here -->
-    </header>
-    <main></main>
-    <footer>
-        <!-- place footer here -->
-    </footer>
+    <div class="container">
+        <header>
+            <h1>桃園景點100選!</h1>
+        </header>
+        <main>
+            <div class="row">
+                <div class="col">
+                    <div class="card" style="width: 18rem;">
+                        <img src="..." class="card-img-top" alt="...">
+                        <div class="card-body">
+                          <h5 class="card-title">景點名稱</h5>
+                          <p class="card-text">景點介紹</p>
+                          <a href="#" class="btn btn-primary">詳細資料</a>
+                        </div>
+                      </div>
+                </div>
+            </div>
+        </main>
+    </div>
     <!-- Bootstrap JavaScript Libraries -->
     <!-- <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
         integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
@@ -36,15 +48,26 @@
         integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
     <script>
         let url = "/homework/homework4/scenic_spot_C_f.json"
+        
         $.getJSON(url, function (datas) {
-            // console.log(datas.XML_Head.Infos.Info[600].Region);
-            //i是1~5511的數
-            //348~602是桃園地區
-            let placeInfo = datas.XML_Head.Infos.Info;  
-            console.log(placeInfo);          
-            // let region = placeInfo.Region;
+            // console.log(datas);
+
+            //先篩圖片 grep+條件
+            let infos = datas.XML_Head.Infos.Info;
+            let hasImgPlaces = infos.filter(function(info){
+                return info.Picture1; 
+            });
+            // console.log(hasImgPlaces);          
+
+            let taoyuanPlaces = hasImgPlaces.filter(function(info){
+                return info.Region === "桃園市";
+            });
+            console.log(taoyuanPlaces);
+            
             
         });
+
+        
     </script>
 </body>
 
